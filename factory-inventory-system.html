@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factory Inventory Management System BUG</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-update {
+            background: #28a745;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn-update:hover {
+            background: #218838;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            padding: 8px 15px;
+            font-size: 0.9em;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        .search-section {
+            margin-bottom: 20px;
+        }
+
+        .search-section input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+        }
+
+        .inventory-table th {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .inventory-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .inventory-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .alert {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-low {
+            color: #dc3545;
+            font-weight: 700;
+        }
+
+        .status-ok {
+            color: #28a745;
+            font-weight: 700;
+        }
+
+        .update-section {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .update-section input {
+            width: 80px;
+            padding: 5px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏭 Factory Inventory Management</h1>
+            <p>Track and manage your factory parts inventory</p>
+            <p>AI generated code by Claude.ai</p>
+        </div>
+
+        <div class="content">
+            <div id="alertContainer"></div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="totalItems">0</h3>
+                    <p>Total Items</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="lowStockItems">0</h3>
+                    <p>Low Stock Alerts</p>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h2>Add New Inventory Item</h2>
+                <form id="inventoryForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="partName">Part Name *</label>
+                            <input type="text" id="partName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity *</label>
+                            <input type="text" id="quantity" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="batchNumber">Batch Number *</label>
+                            <input type="text" id="batchNumber" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="location">Location *</label>
+                            <input type="text" id="location" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reorderThreshold">Reorder Threshold *</label>
+                            <input type="number" id="reorderThreshold" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Item</button>
+                </form>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="🔍 Search by part name...">
+            </div>
+
+            <div>
+                <h2 style="margin-bottom: 15px; color: #2c3e50;">Inventory Items</h2>
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Part Name</th>
+                            <th>Quantity</th>
+                            <th>Batch Number</th>
+                            <th>Location</th>
+                            <th>Reorder Threshold</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let inventory = JSON.parse(localStorage.getItem('factoryInventory')) || [];
+
+        function saveInventory() {
+            localStorage.setItem('factoryInventory', JSON.stringify(inventory));
+        }
+
+        function showAlert(message, type = 'success') {
+            const alertContainer = document.getElementById('alertContainer');
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alertContainer.appendChild(alert);
+
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        function updateStats() {
+            document.getElementById('totalItems').textContent = inventory.length;
+
+            // BUG 2: Reorder alerts trigger incorrectly (shows alert when stock is ABOVE threshold)
+            const lowStockCount = inventory.filter(item => 
+                parseInt(item.quantity) > parseInt(item.reorderThreshold)
+            ).length;
+            document.getElementById('lowStockItems').textContent = lowStockCount;
+        }
+
+        function renderInventory(items = inventory) {
+            const tbody = document.getElementById('inventoryTableBody');
+            tbody.innerHTML = '';
+
+            items.forEach((item, index) => {
+                const row = document.createElement('tr');
+
+                // BUG 2: Status check is inverted (shows LOW when stock is above threshold)
+                const status = parseInt(item.quantity) > parseInt(item.reorderThreshold) 
+                    ? '<span class="status-low">LOW STOCK</span>' 
+                    : '<span class="status-ok">OK</span>';
+
+                row.innerHTML = `
+                    <td>${item.partName}</td>
+                    <td>${item.quantity}</td>
+                    <td>${item.batchNumber}</td>
+                    <td>${item.location}</td>
+                    <td>${item.reorderThreshold}</td>
+                    <td>${status}</td>
+                    <td>
+                        <div class="update-section">
+                            <input type="text" id="updateQty-${index}" placeholder="New qty">
+                            <button class="btn btn-update" onclick="updateQuantity(${index})">Update</button>
+                            <button class="btn btn-delete" onclick="deleteItem(${index})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            if (items.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 30px; color: #999;">No inventory items found</td></tr>';
+            }
+        }
+
+        document.getElementById('inventoryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const partName = document.getElementById('partName').value;
+            const quantity = document.getElementById('quantity').value; // BUG 1: No validation, accepts negative and non-numeric
+            const batchNumber = document.getElementById('batchNumber').value; // BUG 3: No duplicate check
+            const location = document.getElementById('location').value;
+            const reorderThreshold = document.getElementById('reorderThreshold').value;
+
+            const newItem = {
+                partName,
+                quantity,
+                batchNumber,
+                location,
+                reorderThreshold
+            };
+
+            inventory.push(newItem);
+            saveInventory();
+            renderInventory();
+            updateStats();
+            showAlert('Item added successfully!');
+
+            this.reset();
+        });
+
+        function updateQuantity(index) {
+            const newQty = document.getElementById(`updateQty-${index}`).value;
+
+            // BUG 5: Updates wrong item (off-by-one error)
+            const wrongIndex = index + 1;
+            if (wrongIndex < inventory.length) {
+                inventory[wrongIndex].quantity = newQty;
+            } else {
+                inventory[0].quantity = newQty; // Wraps around to first item
+            }
+
+            saveInventory();
+            renderInventory();
+            updateStats();
+            showAlert('Quantity updated!');
+        }
+
+        function deleteItem(index) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                inventory.splice(index, 1);
+                saveInventory();
+                renderInventory();
+                updateStats();
+                showAlert('Item deleted successfully!');
+            }
+        }
+
+        // BUG 4: Search is case-sensitive and doesn't handle partial matches well
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value;
+
+            // Case-sensitive exact match only
+            const filtered = inventory.filter(item => 
+                item.partName === searchTerm
+            );
+
+            renderInventory(filtered);
+        });
+
+        // Initialize
+        renderInventory();
+        updateStats();
+    </script>
+</body>
+</html>

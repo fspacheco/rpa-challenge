@@ -336,7 +336,7 @@
         function updateStats() {
             document.getElementById('totalItems').textContent = inventory.length;
 
-            // BUG 2: Reorder alerts trigger incorrectly (shows alert when stock is ABOVE threshold)
+            
             const lowStockCount = inventory.filter(item => 
                 parseInt(item.quantity) > parseInt(item.reorderThreshold)
             ).length;
@@ -350,7 +350,7 @@
             items.forEach((item, index) => {
                 const row = document.createElement('tr');
 
-                // BUG 2: Status check is inverted (shows LOW when stock is above threshold)
+                
                 const status = parseInt(item.quantity) > parseInt(item.reorderThreshold) 
                     ? '<span class="status-low">LOW STOCK</span>' 
                     : '<span class="status-ok">OK</span>';
@@ -382,9 +382,9 @@
             e.preventDefault();
 
             const partName = document.getElementById('partName').value;
-            const quantity = document.getElementById('quantity').value; // BUG 1: No validation, accepts negative and non-numeric
-            const batchNumber = document.getElementById('batchNumber').value; // BUG 3: No duplicate check
-            const location = document.getElementById('location').value;
+            const quantity = document.getElementById('quantity').value; 
+            const batchNumber = document.getElementById('batchNumber').value; 
+            const location = document.getElementById('partName').value;
             const reorderThreshold = document.getElementById('reorderThreshold').value;
 
             const newItem = {
@@ -407,7 +407,7 @@
         function updateQuantity(index) {
             const newQty = document.getElementById(`updateQty-${index}`).value;
 
-            // BUG 5: Updates wrong item (off-by-one error)
+            
             const wrongIndex = index + 1;
             if (wrongIndex < inventory.length) {
                 inventory[wrongIndex].quantity = newQty;
@@ -431,7 +431,7 @@
             }
         }
 
-        // BUG 4: Search is case-sensitive and doesn't handle partial matches well
+        
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const searchTerm = e.target.value;
 

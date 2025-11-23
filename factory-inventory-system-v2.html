@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Factory Inventory Management System BUG</title>
+    <title>Factory Inventory Management System v.2 (-6 bugs + 2 new)</title>
     <style>
         * {
             margin: 0;
@@ -190,6 +190,12 @@
             border: 1px solid #c3e6cb;
         }
 
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         .status-low {
             color: #dc3545;
             font-weight: 700;
@@ -270,7 +276,7 @@
                         </div>
                         <div class="form-group">
                             <label for="quantity">Quantity *</label>
-                            <input type="text" id="quantity" required>
+                            <input type="number" id="quantity" min="0" required>
                         </div>
                         <div class="form-group">
                             <label for="batchNumber">Batch Number *</label>
@@ -282,7 +288,7 @@
                         </div>
                         <div class="form-group">
                             <label for="reorderThreshold">Reorder Threshold *</label>
-                            <input type="number" id="reorderThreshold" required>
+                            <input type="number" id="reorderThreshold" min="0" required>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Add Item</button>
@@ -334,11 +340,11 @@
         }
 
         function updateStats() {
-            document.getElementById('totalItems').textContent = inventory.length;
+            document.getElementById('totalItems').textContent = inventory.length*2;
 
-            // BUG 2: Reorder alerts trigger incorrectly (shows alert when stock is ABOVE threshold)
+
             const lowStockCount = inventory.filter(item => 
-                parseInt(item.quantity) > parseInt(item.reorderThreshold)
+                parseInt(item.quantity) <= parseInt(item.reorderThreshold)
             ).length;
             document.getElementById('lowStockItems').textContent = lowStockCount;
         }
@@ -350,8 +356,7 @@
             items.forEach((item, index) => {
                 const row = document.createElement('tr');
 
-                // BUG 2: Status check is inverted (shows LOW when stock is above threshold)
-                const status = parseInt(item.quantity) > parseInt(item.reorderThreshold) 
+                const status = parseInt(item.quantity) <= parseInt(item.reorderThreshold) 
                     ? '<span class="status-low">LOW STOCK</span>' 
                     : '<span class="status-ok">OK</span>';
 
@@ -364,7 +369,7 @@
                     <td>${status}</td>
                     <td>
                         <div class="update-section">
-                            <input type="text" id="updateQty-${index}" placeholder="New qty">
+                            <input type="number" id="updateQty-${index}" min="0" placeholder="New qty">
                             <button class="btn btn-update" onclick="updateQuantity(${index})">Update</button>
                             <button class="btn btn-delete" onclick="deleteItem(${index})">Delete</button>
                         </div>
@@ -382,17 +387,30 @@
             e.preventDefault();
 
             const partName = document.getElementById('partName').value;
-            const quantity = document.getElementById('quantity').value; // BUG 1: No validation, accepts negative and non-numeric
-            const batchNumber = document.getElementById('batchNumber').value; // BUG 3: No duplicate check
+            const quantity = document.getElementById('quantity').value;
+            const batchNumber = document.getElementById('batchNumber').value;
             const location = document.getElementById('location').value;
             const reorderThreshold = document.getElementById('reorderThreshold').value;
 
+
+            if (isNaN(quantity) || parseInt(quantity) < 0) {
+                showAlert('Quantity must be a positive number!', 'danger');
+                return;
+            }
+
+
+            const batchExists = inventory.some(item => item.batchNumber === batchNumber);
+            if (batchExists) {
+                showAlert('Batch number already exists! Please use a unique batch number.', 'danger');
+                return;
+            }
+
             const newItem = {
                 partName,
-                quantity,
+                quantity: parseInt(quantity),
                 batchNumber,
                 location,
-                reorderThreshold
+                reorderThreshold: parseInt(reorderThreshold)
             };
 
             inventory.push(newItem);
@@ -407,13 +425,14 @@
         function updateQuantity(index) {
             const newQty = document.getElementById(`updateQty-${index}`).value;
 
-            // BUG 5: Updates wrong item (off-by-one error)
-            const wrongIndex = index + 1;
-            if (wrongIndex < inventory.length) {
-                inventory[wrongIndex].quantity = newQty;
-            } else {
-                inventory[0].quantity = newQty; // Wraps around to first item
+
+            if (!newQty || isNaN(newQty) || parseInt(newQty) < 0) {
+                showAlert('Please enter a valid positive quantity!', 'danger');
+                return;
             }
+
+
+            inventory[index].quantity = parseInt(newQty);
 
             saveInventory();
             renderInventory();
@@ -423,7 +442,7 @@
 
         function deleteItem(index) {
             if (confirm('Are you sure you want to delete this item?')) {
-                inventory.splice(index, 1);
+                inventory.splice(index+1, 1);
                 saveInventory();
                 renderInventory();
                 updateStats();
@@ -431,13 +450,18 @@
             }
         }
 
-        // BUG 4: Search is case-sensitive and doesn't handle partial matches well
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const searchTerm = e.target.value;
 
-            // Case-sensitive exact match only
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+
+            if (searchTerm === '') {
+                renderInventory();
+                return;
+            }
+
+
             const filtered = inventory.filter(item => 
-                item.partName === searchTerm
+                item.partName.toLowerCase().includes(searchTerm)
             );
 
             renderInventory(filtered);

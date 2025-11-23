@@ -29,7 +29,7 @@ The Factory Inventory Management System is a web-based application that allows f
 
 ### Part 1\. Explore the System
 
-* Open the [Factory Inventory Management System](https://fspacheco.github.io/rpa-challenge/factory-inventory-system.html) in your browser
+* Open the [Factory Inventory Management System](https://fspacheco.github.io/rpa-challenge/factory-inventory-system-v1.html) in your browser
 * Add several test items with different values
 * Try the search functionality
 * Update quantities
@@ -99,7 +99,7 @@ Include your full code with syntax highlighting. Do not add the code as image. I
   ````
   ```python
   language='Python'
-  print(f'{1} This is {language} code with syntax highlighting')
+  print(f'This is {language} code with syntax highlighting')
   ```
   ````
 
@@ -107,7 +107,7 @@ Include your full code with syntax highlighting. Do not add the code as image. I
 
   ```python
   language='Python'
-  print(f'{1} This is {language} code with syntax highlighting')
+  print(f'This is {language} code with syntax highlighting')
   ```
 More info at [Github documentation](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/creating-and-highlighting-code-blocks).
 
@@ -115,8 +115,10 @@ More info at [Github documentation](https://docs.github.com/en/get-started/writi
 
 Include:
   * Summary of tests executed
-  * Pass/fail results
   * Coverage summary (that is, answer if you think that these 12 tests are enough. Are there any additional tests you consider necessary?)
+  * Pass/fail results for Version 1 of the website: https://fspacheco.github.io/rpa-challenge/factory-inventory-system-v1.html
+  * Pass/fail results for Version 2 of the website: https://fspacheco.github.io/rpa-challenge/factory-inventory-system-v2.html
+  * Pass/fail results for Version 3 of the website: https://fspacheco.github.io/rpa-challenge/factory-inventory-system-v3.html  
   * Your comments about the process
 
 

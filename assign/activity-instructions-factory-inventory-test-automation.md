@@ -34,7 +34,7 @@ The Factory Inventory Management System is a web-based application that allows f
 * Try the search functionality
 * Update quantities
 * Observe the statistics dashboard
-* Find 5 bugs (check if the provided one is real!) and document them like:
+* Find 5 more bugs (check if the provided one is real!) and document them like:
 
 | Bug ID | Title | Steps to Reproduce | Expected Result | Actual Result | Screenshot/Evidence |
 |--------|-------|-------------------|-----------------|---------------|---------------------|

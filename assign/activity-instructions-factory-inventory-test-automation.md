@@ -38,7 +38,7 @@ The Factory Inventory Management System is a web-based application that allows f
 
 | Bug ID | Title | Steps to Reproduce | Expected Result | Actual Result | Screenshot/Evidence |
 |--------|-------|-------------------|-----------------|---------------|---------------------|
-| BUG-00 | Negative quantities accepted | 1. Open the application<br>2. Click "Add New Inventory Item"<br>3. Enter "-50" in Quantity field<br>4. Fill other required fields<br>5. Click "Add Item" | System should reject negative quantities and show validation error | Item is added with negative quantity (-50) | ![Screenshot image/link](./screenshot-negative-qty.png) |
+| BUG-00 | Negative quantities accepted | 1. Open the application<br>2. Add a new part writing in "Part Name"<br>3. Enter "-20" in Quantity field<br>4. Fill other required fields<br>5. Click "Add Item" | System should reject negative quantities and show validation error | Item is added with negative quantity (-20) | ![Screenshot image/link](./screenshot-negative-qty.png) |
 | BUG-01 |  |  |  |  |  |
 | BUG-02 |  |  |  |  |  |
 | BUG-03 |  |  |  |  |  |

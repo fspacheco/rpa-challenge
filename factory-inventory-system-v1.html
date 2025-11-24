@@ -315,10 +315,10 @@
     </div>
 
     <script>
-        let inventory = JSON.parse(localStorage.getItem('factoryInventory')) || [];
+        let inventory = JSON.parse(localStorage.getItem('factoryInventory1')) || [];
 
         function saveInventory() {
-            localStorage.setItem('factoryInventory', JSON.stringify(inventory));
+            localStorage.setItem('factoryInventory1', JSON.stringify(inventory));
         }
 
         function showAlert(message, type = 'success') {
